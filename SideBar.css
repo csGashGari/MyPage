@@ -50,7 +50,7 @@
     transition: all 0.4s ease;
   }
   nav.open .sidebar {
-    left: 87%;/*Open SideBar From Right to left*/
+    left: 0;/*Open SideBar From Right to left*/
   }
   .sidebar .sidebar-content{
     display: flex;
