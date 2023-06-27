@@ -107,6 +107,14 @@ nav.open ~ .overlay {
   margin-left: -2430px;
   pointer-events: auto;
 }
-.selector-for-some-widget {
-  box-sizing: content-box;
+@media screen and (max-width: 1200px) {
+.sidebar {
+  width: 100%;
+}
+}
+
+@media screen and (min-width: 1200px) {
+.sidebar {
+  width: 30%;
+}
 }
