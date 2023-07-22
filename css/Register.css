@@ -1,0 +1,82 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300&display=swap");
+
+html {
+  height: 100%;
+}
+body {
+  direction: rtl;
+  margin: 0;
+  padding: 0;
+  font-family: "Noto Kufi Arabic", sans-serif;
+}
+
+.reg-box {
+  position: absolute;
+  top: 53%;
+  left: 87.6%;
+  width: 400px;
+  padding: 40px;
+  transform: translate(-50%, -50%);
+  background-color: #2a2b2f;
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+}
+
+.reg-box h2 {
+  margin: 0 0 30px;
+  padding: 0;
+  color: #fff;
+  text-align: center;
+}
+
+.reg-box .info-box {
+  position: relative;
+}
+
+.reg-box .info-box input {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 30px;
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+  background: transparent;
+}
+.reg-box .info-box label {
+  top: 0;
+  left: 0;
+  padding: 10px 0;
+  font-size: 20px;
+  color: #fff;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+@media only screen and (max-width: 720px) {
+  .reg-box {
+    top: 50%;
+    left: 50%;
+  }
+}
+button {
+  font-family: "Noto Kufi Arabic", sans-serif;
+  font-size: 14px;
+  border: none;
+  border-radius: 10px;
+  background-color: #000000;
+  color: #fff;
+  padding: 1em 2em;
+}
+
+button:hover {
+  box-shadow: var(--hover-shadows);
+}
+
+button:active {
+  box-shadow: var(--hover-shadows), var(--accent) 0px 0px 30px 5px;
+  background-color: var(--accent);
+  transform: scale(0.95);
+}
