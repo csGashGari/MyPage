@@ -19,7 +19,6 @@ main {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(#615c5c, #494240);
 }
 .container {
   display: flex;
@@ -100,7 +99,7 @@ main {
   display: inline-block;
   padding: 8px 20px;
   background-color: #000;
-  margin-top: 390px;
+  margin-top: 365px;
   margin-left: 110;
   border-radius: 20px;
   color: #fff;
