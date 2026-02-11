@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>متجر حفصة قشقري</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body class="bg-light">
+    <div class="container py-4">
+      <h1 class="h3 mb-3">متجر حفصة قشقري</h1>
+      <div class="row g-2 align-items-center mb-3">
+        <div class="col-12 col-md-7">
+          <input
+            id="searchInput"
+            class="form-control"
+            type="search"
+            placeholder="ابحث عن منتج..."
+          />
+        </div>
+
+        <div class="col-12 col-md-5">
+          <select id="categorySelect" class="form-select">
+            <option value="">كل التصنيفات</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-8">
+          <div class="row g-3" id="products"></div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center mb-2"
+              >
+                <h2 class="h5 m-0">سلة المشتريات</h2>
+                <button class="btn btn-sm btn-outline-danger" id="clearCart">
+                  تفريغ
+                </button>
+              </div>
+
+              <div id="cartItems" class="vstack gap-2"></div>
+
+              <hr />
+              <div class="d-flex justify-content-between">
+                <span>الإجمالي</span>
+                <strong id="total">0 ر.س</strong>
+              </div>
+
+              <button class="btn btn-dark w-100 mt-3" id="checkout">
+                إتمام الطلب
+              </button>
+              <div class="text-secondary small mt-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap justify-content-center gap-2 mb-3 text-center">
+      <a
+        class="btn btn-outline-dark btn-sm rounded-circle"
+        href="https://instagram.com/USERNAME"
+        target="_blank"
+        rel="noopener"
+        aria-label="Instagram"
+        title="Instagram"
+      >
+        <i class="bi bi-instagram"></i>
+      </a>
+
+      <a
+        class="btn btn-outline-dark btn-sm rounded-circle"
+        href="https://tiktok.com/@USERNAME"
+        target="_blank"
+        rel="noopener"
+        aria-label="TikTok"
+        title="TikTok"
+      >
+        <i class="bi bi-tiktok"></i>
+      </a>
+
+      <a
+        class="btn btn-outline-dark btn-sm rounded-circle"
+        href="https://x.com/USERNAME"
+        target="_blank"
+        rel="noopener"
+        aria-label="X"
+        title="X"
+      >
+        <i class="bi bi-twitter-x"></i>
+      </a>
+    </div>
+
+    <script>
+      ////////////////////////////////////////////
+      const PRODUCTS = [
+        {
+          id: "p1",
+          name: "أظافر تركيبة",
+          price: 10,
+          desc: "",
+          image: "images/111.jpeg",
+          category: "اظافر",
+        },
+        {
+          id: "p2",
+          name: "أظافر بني",
+          price: 20,
+          desc: "",
+          image: "images/222.jpeg",
+          category: "اظافر",
+        },
+        {
+          id: "p3",
+          name: "أظافر ملون",
+          price: 30,
+          desc: "",
+          image: "images/333.jpeg",
+          category: "اظافر",
+        },
+        {
+          id: "p4",
+          name: "أظافر اصفر",
+          price: 40,
+          desc: "",
+          image: "images/444.jpeg",
+          category: "اظافر",
+        },
+        {
+          id: "p5",
+          name: "أظافر مع لصق",
+          price: 50,
+          desc: "",
+          image: "images/555.jpeg",
+          category: "اظافر",
+        },
+        {
+          id: "p6",
+          name: "أظافر اكليريك",
+          price: 60,
+          desc: "",
+          image: "images/888.jpeg",
+          category: "اظافر",
+        },
+        {
+          id: "p7",
+          name: "طقم اكسسوارات ابيض",
+          price: 70,
+          desc: "",
+          image: "images/777.jpeg",
+          category: "إكسسوارات",
+        },
+        {
+          id: "p8",
+          name: "طقم اكسسوارات اسود'",
+          price: 80,
+          desc: "",
+          image: "images/666.jpeg",
+          category: "إكسسوارات",
+        },
+      ];
+
+      const LS_KEY = "cart_v1";
+
+      function loadCart() {
+        try {
+          return JSON.parse(localStorage.getItem(LS_KEY)) ?? {};
+        } catch {
+          return {};
+        }
+      }
+
+      function saveCart(cart) {
+        localStorage.setItem(LS_KEY, JSON.stringify(cart));
+      }
+
+      function addToCart(id) {
+        const cart = loadCart();
+        cart[id] = (cart[id] ?? 0) + 1;
+        saveCart(cart);
+        renderCart();
+      }
+
+      function setQty(id, qty) {
+        const cart = loadCart();
+        if (qty <= 0) delete cart[id];
+        else cart[id] = qty;
+        saveCart(cart);
+        renderCart();
+      }
+
+      function clearCart() {
+        localStorage.removeItem(LS_KEY);
+        renderCart();
+      }
+
+      function moneySAR(x) {
+        return `${x} ر.س`;
+      }
+      function setupFilters() {
+        const select = document.getElementById("categorySelect");
+        const input = document.getElementById("searchInput");
+        if (!select || !input) return;
+
+        const cats = Array.from(
+          new Set(PRODUCTS.map((p) => p.category).filter(Boolean)),
+        ).sort();
+        select.innerHTML =
+          `<option value="">كل التصنيفات</option>` +
+          cats.map((c) => `<option value="${c}">${c}</option>`).join("");
+
+        input.addEventListener("input", renderProducts);
+        select.addEventListener("change", renderProducts);
+      }
+
+      setupFilters();
+
+      function renderProducts() {
+        const el = document.getElementById("products");
+        const q = (document.getElementById("searchInput")?.value || "")
+          .trim()
+          .toLowerCase();
+        const cat = document.getElementById("categorySelect")?.value || "";
+
+        const filtered = PRODUCTS.filter((p) => {
+          const inCat = !cat || p.category === cat;
+          const text = (
+            (p.name || "") +
+            " " +
+            (p.desc || "") +
+            " " +
+            (p.category || "")
+          ).toLowerCase();
+          const inSearch = !q || text.includes(q);
+          return inCat && inSearch;
+        });
+
+        if (filtered.length === 0) {
+          el.innerHTML = `<div class="col-12"><div class="alert alert-secondary mb-0">لا توجد نتائج.</div></div>`;
+          return;
+        }
+
+        el.innerHTML = filtered
+          .map(
+            (p) => `
+      <div class="col-12 col-md-6">
+        <div class="card h-100">
+          <img src="${p.image}" class="card-img-top img-fluid" alt="${p.name}" loading="lazy">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+              <div>
+                <h3 class="h6 mb-1">${p.name}</h3>
+                <span class="badge text-bg-secondary">${p.category || "بدون تصنيف"}</span>
+              </div>
+              <span class="fw-semibold">${moneySAR(p.price)}</span>
+            </div>
+            <p class="text-secondary small mt-2 mb-3">${p.desc}</p>
+            <button class="btn btn-sm btn-primary" onclick="addToCart('${p.id}')">أضف للسلة</button>
+          </div>
+        </div>
+      </div>
+    `,
+          )
+          .join("");
+      }
+
+      function renderCart() {
+        const cart = loadCart();
+        const itemsEl = document.getElementById("cartItems");
+        const totalEl = document.getElementById("total");
+
+        const entries = Object.entries(cart);
+        if (entries.length === 0) {
+          itemsEl.innerHTML = `<div class="text-secondary">السلة فارغة.</div>`;
+          totalEl.textContent = moneySAR(0);
+          return;
+        }
+
+        let total = 0;
+        itemsEl.innerHTML = entries
+          .map(([id, qty]) => {
+            const p = PRODUCTS.find((x) => x.id === id);
+            if (!p) return "";
+            const line = p.price * qty;
+            total += line;
+
+            return `
+          <div class="border rounded p-2 bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <img src="${p.image}" class="card-img-top img-fluid scale-70" alt="${p.name}" loading="lazy">
+                <div class="fw-semibold">${p.name}</div>
+                <div class="text-secondary small">${moneySAR(p.price)} للقطعة</div>
+              </div>
+
+              <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-sm btn-outline-secondary" onclick="setQty('${id}', ${qty - 1})">-</button>
+                <span class="px-2">${qty}</span>
+                <button class="btn btn-sm btn-outline-secondary" onclick="setQty('${id}', ${qty + 1})">+</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="setQty('${id}', 0)">حذف</button>
+              </div>
+            </div>
+
+            <div class="text-end text-secondary small mt-1">المجموع: ${moneySAR(line)}</div>
+          </div>
+        `;
+          })
+          .join("");
+
+        totalEl.textContent = moneySAR(total);
+      }
+
+      document.getElementById("clearCart").addEventListener("click", clearCart);
+      document.getElementById("checkout").addEventListener("click", () => {
+        const cart = loadCart();
+        if (Object.keys(cart).length === 0) return alert("السلة فارغة.");
+        alert("تم ارسال الطلب (افتراضيا).");
+      });
+
+      renderProducts();
+      renderCart();
+    </script>
+  </body>
+</html>
